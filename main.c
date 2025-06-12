@@ -35,7 +35,7 @@ void print_usage(int exit_code, char *prog_name);
 void handle_signal(int sig);
 
 void run_server(const Config *config);
-void handle_request(int client_socket, const char *file_path);
+void handle_request(int client_fd, const char *file_path);
 
 int main(int argc, char **argv)
 {
@@ -216,7 +216,7 @@ void handle_signal(int sig)
   }
 }
 
-void handle_request(int client_socket, const char *file_path){
+void handle_request(int client_fd, const char *file_path){
   char response[BUF_SIZE];
   struct stat st;
 
@@ -228,8 +228,8 @@ void handle_request(int client_socket, const char *file_path){
     syslog(LOG_DEBUG, "Sent file size %ld for %s", st.st_size, file_path);
   }
 
-  write(client_socket, response, strlen(response));
-  close(client_socket);
+  write(client_fd, response, strlen(response));
+  close(client_fd);
 }
 
 void run_server(const Config *config) {
